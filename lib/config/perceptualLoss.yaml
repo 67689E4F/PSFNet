@@ -1,0 +1,101 @@
+DATASET:
+  DATASET: 'shuffle_ded'
+  PATH: "/media/user/新加卷/67689e4f/dataset"
+
+RANDOMSEED: 3407
+GPUS: "0, 1"
+WORKERS: 32
+PIN_MEMORY: false
+AUTO_RESUME: true
+PRINT_FREQ: 200
+FLIP: 0.5
+ROTATION: 45
+TRAIN:
+  BATCH_SIZE_PER_GPU: 8
+  BEGIN_EPOCH: 0
+  END_EPOCH: 210
+  SHUFFLE: false
+  OPTIMIZER: "adam"
+  LR: 0.0001
+  LR_FACTOR: 0.1
+  MOMENTUM: 0.9
+  WD: 0.0001
+  NESTEROV: false
+  LR_STEP:
+  - 50
+  - 100
+MODEL:
+  IMAGE_SIZE:
+  - 128
+  - 128
+  INIT_WEIGHTS: false
+  NAME: domainAdaptation
+  PRETRAINED: None
+  HeatMapChannel: 1
+  EXTRA:
+    PRETRAINED_LAYERS:
+    - 'conv1'
+    - 'bn1'
+    - 'conv2'
+    - 'bn2'
+    - 'layer1'
+    - 'transition1'
+    - 'stage2'
+    - 'transition2'
+    - 'stage3'
+    - 'transition3'
+    - 'stage4'
+    FINAL_CONV_KERNEL: 1
+    STAGE2:
+      NUM_MODULES: 1
+      NUM_BRANCHES: 2
+      BLOCK: BASIC
+      NUM_BLOCKS:
+      - 4
+      - 4
+      NUM_CHANNELS:
+      - 48
+      - 96
+      FUSE_METHOD: SUM
+    STAGE3:
+      NUM_MODULES: 4
+      NUM_BRANCHES: 3
+      BLOCK: BASIC
+      NUM_BLOCKS:
+      - 4
+      - 4
+      - 4
+      NUM_CHANNELS:
+      - 48
+      - 96
+      - 192
+      FUSE_METHOD: SUM
+    STAGE4:
+      NUM_MODULES: 3
+      NUM_BRANCHES: 4
+      BLOCK: BASIC
+      NUM_BLOCKS:
+      - 4
+      - 4
+      - 4
+      - 4
+      NUM_CHANNELS:
+      - 48
+      - 96
+      - 192
+      - 384
+      FUSE_METHOD: SUM
+
+
+CUDNN:
+  BENCHMARK: true
+  DETERMINISTIC: false
+  ENABLED: true
+OUTPUT_DIR: 'output'
+LOG_DIR: 'log'
+TEST:
+  BATCH_SIZE_PER_GPU: 1
+  FLIP_TEST: False
+  POST_PROCESS: False
+  SHIFT_HEATMAP: False
+
